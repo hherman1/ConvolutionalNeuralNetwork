@@ -5,6 +5,7 @@ from pybrain.structure.modules.tanhlayer import TanhLayer
 from pybrain.structure.moduleslice import ModuleSlice
 from pybrain.structure.networks.feedforward import FeedForwardNetwork
 from pybrain.structure.connections.shared import MotherConnection, SharedFullConnection
+from pybrain.structure.connections.full import FullConnection
 from pybrain.structure.modules.sigmoidlayer import SigmoidLayer
 
 __author__ = 'Tom Schaul, tom@idsia.ch'
@@ -33,10 +34,12 @@ class SimpleConvolutionalNetwork(FeedForwardNetwork):
 
 	for i in range(numLayers):
             prevLayer = self.addConvolutionalLayer(inputdim,outdim,prevLayer,convSize,numFeatureMaps)
-            outdim = insize - convSize + 1
-	self.addOutputModule(LinearLayer(10))
+            outdim = outdim - convSize + 1
+        outLayer = SigmoidLayer(10)
+        self.addOutputModule(outLayer)
+        self.addConnection(FullConnection(prevLayer,outLayer))
 
-    def addConvolutionalLayer(self,inputdim, insize, inlayer, convSize, numFeatureMaps):
+    def addConvolutionalLayer(self, inputdim, insize, inlayer, convSize, numFeatureMaps):
 	#build layers
         outdim = insize - convSize + 1
         hlayer = TanhLayer(outdim * outdim * numFeatureMaps, name='h')

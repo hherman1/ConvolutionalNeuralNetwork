@@ -1,4 +1,4 @@
-#generate xml neural networks and record the time taken to generate them jkj
+#outdim xml neural networks and record the time taken to generate them jkj
 import sys
 
 from time import clock
@@ -39,7 +39,7 @@ def buildConvolutionalNetworks(base,tests):
 	for (i,t) in enumerate(tests):
 		start = clock()
 		net = SimpleConvolutionalNetwork()
-		net.genNetwork(1,28,4,4,t)
+		net.genNetwork(1,28,12,4,t)
 		nets.append(net)
 		end = clock()
 		duration = end - start
@@ -48,6 +48,7 @@ def buildConvolutionalNetworks(base,tests):
 def trainNetworks(base,nets,ds):
 	trainedNets = []
 	for (i,n) in enumerate(nets):
+		print "training",i
 		start = clock()
 		trainer = BackpropTrainer(n,ds)
 		trainer.train()
@@ -74,7 +75,7 @@ if __name__ == "__main__":
 	MNISTDIR = "MNIST/"
 	(train,test) = makeMnistDataSets(rootPath + MNISTDIR)
 
-	convolutionalTestValues = [1,2,3,4]
+	convolutionalTestValues = [2,3,4]
 	
 	buildStructure(rootPath)
 	nets = buildConvolutionalNetworks(convDir,convolutionalTestValues)
