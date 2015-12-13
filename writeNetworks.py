@@ -38,7 +38,8 @@ def buildConvolutionalNetworks(base,tests):
 	nets = []
 	for (i,t) in enumerate(tests):
 		start = clock()
-		net = SimpleConvolutionalNetwork(1,28,19,t)
+		net = SimpleConvolutionalNetwork()
+		net.genNetwork(1,28,4,4,t)
 		nets.append(net)
 		end = clock()
 		duration = end - start
@@ -52,9 +53,11 @@ def trainNetworks(base,nets,ds):
 		trainer.train()
 		end = clock()
 		duration = end - start
-		NetworkWriter.writeToFile(trainer.module,base + "i/net.xml")
+		NetworkWriter.writeToFile(trainer.module,base + str(i) + "/net.xml")
 		writeFile(base + str(i) + "/trainTime.txt","The network took " + str(duration) + "seconds to train.")
 		trainedNets.append(trainer.module)
+#		print statement
+		print i,duration
 	return trainedNets
 def testAccuracy(base,nets,ts):
 	for (i,n) in enumerate(nets):
@@ -66,11 +69,14 @@ def testAccuracy(base,nets,ts):
 		
 if __name__ == "__main__":
 	rootPath = "/Users/hherman1/ConvolutionalNeuralNetwork/"
+	resDir = rootPath + "results/"
+	convDir = resDir + "convolutional/"
 	MNISTDIR = "MNIST/"
 	(train,test) = makeMnistDataSets(rootPath + MNISTDIR)
 
-	convolutionalTestValues = [3,4,5,6,7]
-
+	convolutionalTestValues = [1,2,3,4]
+	
 	buildStructure(rootPath)
-	nets = buildConvolutionalNetworks(rootPath + "results/convolutional/",convolutionalTestValues)
-	testAccuracy(rootPath + "results/convolutional/",nets,test)
+	nets = buildConvolutionalNetworks(convDir,convolutionalTestValues)
+	nets = trainNetworks(convDir,nets,train)
+	testAccuracy(convDir,nets,test)

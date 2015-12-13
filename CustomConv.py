@@ -17,22 +17,33 @@ class SimpleConvolutionalNetwork(FeedForwardNetwork):
     """ A network with a specific form of weight-sharing, on a single 2D layer,
     convoluting neighboring inputs (within a square). """
 
-    def __init__(self, inputdim, insize, convSize, numFeatureMaps, **args):
+    def __init__(self, **args):
         FeedForwardNetwork.__init__(self, **args)
+
+    def genNetwork(self, inputdim, insize, convSize, numFeatureMaps,numLayers):
         inlayer = LinearLayer(inputdim * insize * insize)
         self.addInputModule(inlayer)
-        self._buildStructure(inputdim, insize, inlayer, convSize, numFeatureMaps)
+        self._buildStructure(inputdim, insize, inlayer, convSize, numFeatureMaps,numLayers)
         self.sortModules()
 
 
-    def _buildStructure(self, inputdim, insize, inlayer, convSize, numFeatureMaps):
-        #build layers
+    def _buildStructure(self, inputdim, insize, inlayer, convSize, numFeatureMaps,numLayers):
+	prevLayer = inlayer
+        outdim = insize
+
+	for i in range(numLayers):
+            prevLayer = self.addConvolutionalLayer(inputdim,outdim,prevLayer,convSize,numFeatureMaps)
+            outdim = insize - convSize + 1
+	self.addOutputModule(LinearLayer(10))
+
+    def addConvolutionalLayer(self,inputdim, insize, inlayer, convSize, numFeatureMaps):
+	#build layers
         outdim = insize - convSize + 1
         hlayer = TanhLayer(outdim * outdim * numFeatureMaps, name='h')
         self.addModule(hlayer)
 
-        outlayer = SigmoidLayer(outdim, name='out')
-        self.addOutputModule(outlayer)
+        outlayer = SigmoidLayer(outdim * outdim, name='out')
+        self.addModule(outlayer)
 
         # build shared weights
         convConns = []
@@ -41,13 +52,16 @@ class SimpleConvolutionalNetwork(FeedForwardNetwork):
         outConn = MotherConnection(numFeatureMaps)
 
         # establish the connections.
-        for j in range(outdim):
-            offset = j
-            outmod = ModuleSlice(hlayer, inSliceFrom=offset * numFeatureMaps, inSliceTo=(offset + 1) * numFeatureMaps,
-                                 outSliceFrom=offset * numFeatureMaps, outSliceTo=(offset + 1) * numFeatureMaps)
-            self.addConnection(SharedFullConnection(outConn, outmod, outlayer, outSliceFrom=offset, outSliceTo=offset + 1))
+        for i in range(outdim):
+            for j in range(outdim):
+                offset = i * outdim + j
+                outmod = ModuleSlice(hlayer, inSliceFrom=offset * numFeatureMaps, inSliceTo=(offset + 1) * numFeatureMaps,
+                                     outSliceFrom=offset * numFeatureMaps, outSliceTo=(offset + 1) * numFeatureMaps)
+                self.addConnection(SharedFullConnection(outConn, outmod, outlayer, outSliceFrom=offset, outSliceTo=offset + 1))
 
-            for k, mc in enumerate(convConns):
-                offset = insize * (k) + j
-                inmod = ModuleSlice(inlayer, outSliceFrom=offset * inputdim, outSliceTo=offset * inputdim + convSize * inputdim)
-                self.addConnection(SharedFullConnection(mc, inmod, outmod))
+                for k, mc in enumerate(convConns):
+                    offset = insize * (i + k) + j
+                    inmod = ModuleSlice(inlayer, outSliceFrom=offset * inputdim, outSliceTo=offset * inputdim + convSize * inputdim)
+                    self.addConnection(SharedFullConnection(mc, inmod, outmod))
+
+	return outlayer	

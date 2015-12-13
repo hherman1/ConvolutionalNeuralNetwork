@@ -1,0 +1,1 @@
+The network tested in 14.417455 seconds with an MSE of 0.0901266676915
