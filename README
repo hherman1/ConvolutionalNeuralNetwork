@@ -1,0 +1,17 @@
+Welcome to our project!
+We provide an installation script "setup.sh" that will make sure the environment is prepared for running our code. After you run the script, make sure you also run `source bin/activate` so that the installed packages are available. Alternately, if you'd rather set it up by yourself, make sure you've done the following:
+-installed pybrain (pip install pybrain)
+-downloaded the MNIST dataset
+
+Regardless of how you complete the prior steps, you MUST do the following:
+-adjusted the various PATH variables in writeNetworks.py (at the bottom) to suit your system
+
+If you'd like to try the tensorflow implementation of Convolutional Neural Networks, install tensorflow as well! env.sh will do this for you, but otherwise you can simply run:
+	pip install --upgrade https://storage.googleapis.com/tensorflow/mac/tensorflow-0.5.0-py2-none-any.whl
+WARNING: This is the Mac/CPU-only version of Tensorflow, if you'd like to try a different installation, visit their website tensorflow.org.
+
+Finally, you should be ready to run our project. Any of the following will produce some interesting results:
+python writeNetworks.py
+python tensor.py
+
+writeNetworks.py will train and evaluate multiple Convolutional Neural Networks, LSTM networks, and Feed Forward Networks. tensor.py will train and evaluate a single 2-layer convolutional Neural Network.
