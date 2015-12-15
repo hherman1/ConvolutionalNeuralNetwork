@@ -1,3 +1,5 @@
+#This is a modified NetworkReader from pybrain that imports our CustomConv class, so that it can be used to read the saved trained neural networks of that type
+
 from __future__ import print_function
 
 __author__ = 'Tom Schaul, tom@idsia.ch'

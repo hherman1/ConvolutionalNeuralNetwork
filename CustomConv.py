@@ -1,3 +1,8 @@
+#This is a modification of pybrain's built-in convolutional network class to allow the implementation of multiple stacked convolutional layers
+#Each stacked convolutional layer is actually 2 pybrain modules, one is a tanh module with convLayerDim * secretNodes dimension, and the other is a sigmoid layer with convLayerDim dimension. 
+#The primary work of this program is in appropriately connecting the neurons, which is a relatively difficult task in pybrain.  The primary modification we made
+# was to stack more and more of these dual-module layers ontop of one another using pybrain's logic for connecting the layers appropriately. 
+
 from __future__ import print_function
 
 from pybrain.structure.modules.linearlayer import LinearLayer

@@ -1,3 +1,5 @@
+# This code was provided by the tensorflow tutorial. It was used to evaluate a convolutional neural network due to the sheer slowness of the pybrain alternative.
+
 import tensorflow as tf
 import input_data
 sess = tf.InteractiveSession()
