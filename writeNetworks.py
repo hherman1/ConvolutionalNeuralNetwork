@@ -35,7 +35,7 @@ def buildStructure(root):
 		guarenteeDir(base + "convolutional/" + str(i))
 	for (i,v) in enumerate(lstmTestValues):
 		guarenteeDir(base + "lstm/" + str(i))
-	for (i,v) in enumerate(feedForwardTestValues):
+	for (i,v) in enumerate(ffTestValues):
 		guarenteeDir(base + "com/" + str(i))
 	
 #Make convolutional networks
@@ -56,7 +56,7 @@ def buildLSTMNetworks(base,tests):
 	nets = []
 	for (i,t) in enumerate(tests):
 		start = clock()
-		nets.append(buildNetwork(28*28,t*10,10,hiddenclass=LSTMLayer,recurrent=true) #input dimension is 28*28, hidden layer has t*10 nodes,output layer has 10 nodes.
+		nets.append(buildNetwork(28*28,t*10,10,hiddenclass=LSTMLayer,recurrent=True)) #input dimension is 28*28, hidden layer has t*10 nodes,output layer has 10 nodes.
 		end = clock()
 		duration = end - start
 		writeFile(base + str(i) + "/initalizeNetworkTime.txt","The run time to initialize the network was was:" + str(duration))
@@ -66,7 +66,7 @@ def buildFeedForwardNetworks(base,tests):
 	nets = []
 	for (i,t) in enumerate(tests):
 		start = clock()
-		nets.append(buildNetwork(28*28,t*28,10) #input dimension is 28*28, hidden layer has t*28 nodes, output has 10 nodes
+		nets.append(buildNetwork(28*28,t*28,10)) #input dimension is 28*28, hidden layer has t*28 nodes, output has 10 nodes
 		end = clock()
 		duration = end - start
 		writeFile(base + str(i) + "/initalizeNetworkTime.txt","The run time to initialize the network was was:" + str(duration))
@@ -108,9 +108,9 @@ if __name__ == "__main__":
 	(train,test) = makeMnistDataSets(rootPath + MNISTDIR)
 	
 	#designate testing values
-	convolutionalTestValues = [2,3,4]
+	convolutionalTestValues = []
 	lstmTestValues = [1,2,5,10]
-	feedForwardTestValues = [1,2,3,4,5,6]
+	ffTestValues = [1,2,3,4,5,6]
 
 	#build folder structure
 	buildStructure(rootPath)
@@ -122,11 +122,11 @@ if __name__ == "__main__":
 	testAccuracy(convDir,nets,test)
 
 	#evaluate lstm networks
-	nets = buildLSTMNetworks(lstmDir,convolutionalTestValues)
+	nets = buildLSTMNetworks(lstmDir,lstmTestValues)
 	nets = trainNetworks(lstmDir,nets,train)
 	testAccuracy(lstmDir,nets,test)
 
 	#evaluate FeedForward networks
-	nets = buildFeedForwardNetworks(ffDir,convolutionalTestValues)
+	nets = buildFeedForwardNetworks(ffDir,ffTestValues)
 	nets = trainNetworks(ffDir,nets,train)
 	testAccuracy(ffDir,nets,test)
