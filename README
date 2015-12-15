@@ -1,3 +1,6 @@
+Investigating Neural Networks
+Hunter Herman, Joweina Hsiao, Talha Ahsan
+
 Welcome to our project!
 We provide an installation script "setup.sh" that will make sure the environment is prepared for running our code. After you run the script, make sure you also run `source bin/activate` so that the installed packages are available. Alternately, if you'd rather set it up by yourself, make sure you've done the following:
 -installed pybrain (pip install pybrain)
