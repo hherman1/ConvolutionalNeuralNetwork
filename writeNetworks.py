@@ -6,10 +6,12 @@ from os import mkdir
 from os.path import exists
 
 from CustomConv import SimpleConvolutionalNetwork
+from pybrain.structure.modules import LSTMLayer
 from pybrain.tools.xml.networkwriter import NetworkWriter
 from pybrain.tools.datasets.mnist import makeMnistDataSets
 from pybrain.supervised.trainers import BackpropTrainer
 from pybrain.tools.validation import ModuleValidator
+from pybrain.tools.shortcuts import buildNetwork
 
 def guarenteeDir(path):
 	if not exists(path):
@@ -23,15 +25,15 @@ def writeFile(path,string):
 def buildStructure(root):
 	base = root + "results/"
 	guarenteeDir(base)
-	guarenteeDir(base + "convolutional/")
-	guarenteeDir(base + "lstm/")
-	guarenteeDir(base + "com/")
+	guarenteeDir(lstmDir)
+	guarenteeDir(convDir)
+	guarenteeDir(ffDir)
 	for (i,v) in enumerate(convolutionalTestValues):
 		guarenteeDir(base + "convolutional/" + str(i))
-#	for (i,v) in enumerate(lstmTestValues):
-#		guarenteeDir(base + "lstm/" + str(i))
-	#for (i,v) in enumerate(comTestValues):
-	#	guarenteeDir(base + "com/" + str(i))
+	for (i,v) in enumerate(lstmTestValues):
+		guarenteeDir(base + "lstm/" + str(i))
+	for (i,v) in enumerate(feedForwardTestValues):
+		guarenteeDir(base + "com/" + str(i))
 	
 #make convolutional networks
 def buildConvolutionalNetworks(base,tests):
@@ -41,6 +43,24 @@ def buildConvolutionalNetworks(base,tests):
 		net = SimpleConvolutionalNetwork()
 		net.genNetwork(1,28,12,4,t)
 		nets.append(net)
+		end = clock()
+		duration = end - start
+		writeFile(base + str(i) + "/initalizeNetworkTime.txt","The run time to initialize the network was was:" + str(duration))
+	return nets
+def buildLSTMNetworks(base,tests):
+	nets = []
+	for (i,t) in enumerate(tests):
+		start = clock()
+		nets.append(buildNetwork(28*28,t*10,10,hiddenclass=LSTMLayer,recurrent=true)
+		end = clock()
+		duration = end - start
+		writeFile(base + str(i) + "/initalizeNetworkTime.txt","The run time to initialize the network was was:" + str(duration))
+	return nets
+def buildFeedForwardNetworks(base,tests):
+	nets = []
+	for (i,t) in enumerate(tests):
+		start = clock()
+		nets.append(buildNetwork(28*28,t*28,10)
 		end = clock()
 		duration = end - start
 		writeFile(base + str(i) + "/initalizeNetworkTime.txt","The run time to initialize the network was was:" + str(duration))
@@ -72,12 +92,17 @@ if __name__ == "__main__":
 	rootPath = "/Users/hherman1/ConvolutionalNeuralNetwork/"
 	resDir = rootPath + "results/"
 	convDir = resDir + "convolutional/"
+	lstmDir = resDir + "lstm/"
+	ffDir = resDir + "feedforward/"
 	MNISTDIR = "MNIST/"
 	(train,test) = makeMnistDataSets(rootPath + MNISTDIR)
 
 	convolutionalTestValues = [2,3,4]
+	lstmTestValues = [1,2,5,10]
+	feedForwardTestValues = [1,2,3,4,5,6]
 	
 	buildStructure(rootPath)
+
 	nets = buildConvolutionalNetworks(convDir,convolutionalTestValues)
 	nets = trainNetworks(convDir,nets,train)
 	testAccuracy(convDir,nets,test)
