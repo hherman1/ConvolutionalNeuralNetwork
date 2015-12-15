@@ -1,1 +1,0 @@
-The run time to initialize the network was was:0.005636

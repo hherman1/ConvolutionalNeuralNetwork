@@ -1,1 +1,0 @@
-The network took 382.974848seconds to train.

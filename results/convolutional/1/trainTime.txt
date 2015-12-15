@@ -1,1 +1,0 @@
-The network took seconds to train.
