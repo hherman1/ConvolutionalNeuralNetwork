@@ -3,7 +3,7 @@ We provide an installation script "setup.sh" that will make sure the environment
 -installed pybrain (pip install pybrain)
 -downloaded the MNIST dataset
 
-Regardless of how you complete the prior steps, you MUST do the following:
+Regardless of how you complete the prior steps, you MUST have done the following:
 -adjusted the various PATH variables in writeNetworks.py (at the bottom) to suit your system
 
 If you'd like to try the tensorflow implementation of Convolutional Neural Networks, install tensorflow as well! env.sh will do this for you, but otherwise you can simply run:
