@@ -14,4 +14,4 @@ Finally, you should be ready to run our project. Any of the following will produ
 python writeNetworks.py
 python tensor.py
 
-writeNetworks.py will train and evaluate multiple Convolutional Neural Networks, LSTM networks, and Feed Forward Networks. tensor.py will train and evaluate a single 2-layer convolutional Neural Network.
+writeNetworks.py will train and evaluate multiple Convolutional Neural Networks, LSTM networks, and Feed Forward Networks. tensor.py will train and evaluate a single 2-layer convolutional Neural Network using the Tensorflow backend.
